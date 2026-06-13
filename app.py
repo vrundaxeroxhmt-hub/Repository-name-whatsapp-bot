@@ -4,13 +4,14 @@ import requests
 import os
 import PyPDF2
 import tempfile
+app = Flask(__name__)
 @app.route("/telegram-test")
 def telegram_test():
 
     send_telegram("✅ Telegram Test Success")
 
     return "Telegram Sent"
-app = Flask(__name__)
+
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 @app.route("/telegram-test")

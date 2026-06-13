@@ -4,7 +4,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def home():
-    return "WhatsApp Print Bot Running"
+    return "TEST 12345"
 
 @app.route("/telegram-test")
 def telegram_test():

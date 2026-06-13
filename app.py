@@ -5,7 +5,10 @@ import os
 import PyPDF2
 import tempfile
 app = Flask(__name__)
-
+@app.route("/telegram-test")
+def telegram_test():
+    send_telegram("TEST FROM RENDER")
+    return "Telegram Sent"
 TELEGRAM_BOT_TOKEN = "8901318810:AAFszegHbEY2mw6sERa-khj1ghrRqBDmdkI"
 TELEGRAM_CHAT_ID = "264634921"
 def send_telegram(text):

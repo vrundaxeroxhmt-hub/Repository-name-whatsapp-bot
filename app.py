@@ -92,48 +92,46 @@ def webhook():
             }
 
         # =====================
-        # TEXT COMMANDS
-        # =====================
-        if msg["type"] == "text":
+# TEXT COMMANDS
+# =====================
+if msg["type"] == "text":
 
-            text = msg["text"]["body"].strip().upper()
+    text = msg["text"]["body"].strip().upper()
 
-            # STATUS
-            if text == "STATUS":
+    # STATUS
+    if text == "STATUS":
 
-                pdf_pages = orders[sender]["pdf_pages"]
-                photos = orders[sender]["photos"]
+        pdf_pages = orders[sender]["pdf_pages"]
+        photos = orders[sender]["photos"]
 
-                total = (
-                    pdf_pages * PDF_RATE
-                    + photos * PHOTO_RATE
-                )
+        total = (
+            pdf_pages * PDF_RATE
+            + photos * PHOTO_RATE
+        )
 
-                reply = f"""📋 CURRENT ORDER
+        reply = f"""CURRENT ORDER
 
-📄 PDF Pages: {pdf_pages}
-🖼 Photos: {photos}
+PDF Pages: {pdf_pages}
+Photos: {photos}
 
-💰 Current Total: ₹{total}
+Current Total: Rs.{total}
 """
 
-                send_message(sender, reply)
-                return "OK", 200
-        # =====================
-        # DONE
-        # =====================
+        send_message(sender, reply)
+        return "OK", 200
 
-elif text == "DONE":
+    # DONE
+    elif text == "DONE":
 
-    pdf_pages = orders[sender]["pdf_pages"]
-    photos = orders[sender]["photos"]
+        pdf_pages = orders[sender]["pdf_pages"]
+        photos = orders[sender]["photos"]
 
-    pdf_cost = pdf_pages * PDF_RATE
-    photo_cost = photos * PHOTO_RATE
+        pdf_cost = pdf_pages * PDF_RATE
+        photo_cost = photos * PHOTO_RATE
 
-    total = pdf_cost + photo_cost
+        total = pdf_cost + photo_cost
 
-    telegram_msg = f"""NEW ORDER
+        telegram_msg = f"""NEW ORDER
 
 Customer: {sender}
 
@@ -143,9 +141,9 @@ Photos: {photos}
 Total: Rs.{total}
 """
 
-    send_telegram(telegram_msg)
+        send_telegram(telegram_msg)
 
-    bill = f"""FINAL BILL
+        bill = f"""FINAL BILL
 
 PDF Pages: {pdf_pages}
 Photos: {photos}
@@ -153,9 +151,7 @@ Photos: {photos}
 PDF Cost: Rs.{pdf_cost}
 Photo Cost: Rs.{photo_cost}
 
---------------------
 TOTAL: Rs.{total}
---------------------
 
 UPI:
 {UPI_ID}
@@ -163,9 +159,24 @@ UPI:
 Payment kari screenshot moklo.
 """
 
-    send_message(sender, bill)
+        send_message(sender, bill)
 
-    return "OK", 200
+        return "OK", 200
+
+    # RESET
+    elif text == "RESET":
+
+        orders[sender] = {
+            "pdf_pages": 0,
+            "photos": 0
+        }
+
+        send_message(
+            sender,
+            "Order Reset Successfully"
+        )
+
+        return "OK", 200
         # =====================
         # PDF
         # =====================

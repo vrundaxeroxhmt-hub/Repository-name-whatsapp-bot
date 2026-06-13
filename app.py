@@ -70,24 +70,29 @@ def webhook():
     data = request.json
 
     try:
-        value = data["entry"][0]["changes"][0]["value"]
+    value = data["entry"][0]["changes"][0]["value"]
 
-        if "messages" not in value:
-            return "OK", 200
+    if "messages" not in value:
+        return "OK", 200
 
-        msg = value["messages"][0]
-        sender = msg["from"]
+    msg = value["messages"][0]
+    sender = msg["from"]
 
-        # Create User Record
-        if sender not in orders:
-            orders[sender] = {
-                "pdf_pages": 0,
-                "photos": 0
-            }
+    if sender not in orders:
+        orders[sender] = {
+            "pdf_pages": 0,
+            "photos": 0
+        }
+
+    if msg["type"] == "text":
+        ...
+        
+except Exception as e:
+    print("ERROR:", e)
 
         # =====================
-# TEXT COMMANDS
-# =====================
+        # TEXT COMMANDS
+        # =====================
 if msg["type"] == "text":
 
     text = msg["text"]["body"].strip().upper()

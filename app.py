@@ -26,12 +26,6 @@ def send_telegram(text):
     print("Telegram:", response.text)
 
 
-@app.route("/telegram-test")
-def telegram_test():
-
-    send_telegram("✅ Telegram Test Success")
-
-    return "Telegram Sent"
 # =========================
 # CONFIG
 # =========================

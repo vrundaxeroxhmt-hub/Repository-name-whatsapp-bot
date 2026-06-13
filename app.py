@@ -120,44 +120,26 @@ def webhook():
             # DONE
             elif text == "DONE":
 
-                pdf_pages = orders[sender]["pdf_pages"]
-                photos = orders[sender]["photos"]
+    pdf_pages = orders[sender]["pdf_pages"]
+    photos = orders[sender]["photos"]
 
-                pdf_cost = pdf_pages * PDF_RATE
-                photo_cost = photos * PHOTO_RATE
+    total = pdf_pages * PDF_RATE + photos * PHOTO_RATE
 
-                total = pdf_cost + photo_cost
-
-                bill = f"""📋 FINAL BILL
-send_telegram(
-f"""🆕 NEW ORDER
+    telegram_msg = f"""NEW ORDER
 
 Customer: {sender}
 
 PDF Pages: {pdf_pages}
 Photos: {photos}
 
-Total: ₹{total}
+Total: Rs.{total}
 """
-)
-                send_message(sender, bill)
-                return "OK", 200
 
-            # RESET
-            elif text == "RESET":
+    send_telegram(telegram_msg)
 
-                orders[sender] = {
-                    "pdf_pages": 0,
-                    "photos": 0
-                }
+    send_message(sender, bill)
 
-                send_message(
-                    sender,
-                    "✅ Order Reset Successfully"
-                )
-
-                return "OK", 200
-
+    return "OK", 200
         # =====================
         # PDF
         # =====================

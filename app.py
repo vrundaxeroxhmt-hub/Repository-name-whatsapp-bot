@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template_string
+from flask import Flask, request
 import requests
 import os
 import PyPDF2
@@ -10,57 +10,23 @@ VERIFY_TOKEN = os.getenv("VERIFY_TOKEN", "myverify123")
 WHATSAPP_TOKEN = os.getenv("WHATSAPP_TOKEN", "")
 PHONE_NUMBER_ID = os.getenv("PHONE_NUMBER_ID", "")
 
-PRICE_PER_PAGE = 2
-
-# 📊 SIMPLE MEMORY STORAGE (for demo)
-orders = []
-
-
 # ---------------- HOME ----------------
 @app.route("/")
 def home():
-    return "WhatsApp PDF Bot + Admin Panel Running 🚀"
-
-
-# ---------------- ADMIN PANEL ----------------
-@app.route("/admin")
-def admin():
-
-    total_orders = len(orders)
-    total_earnings = sum(o["price"] for o in orders)
-
-    html = """
-    <h1>📊 Admin Panel</h1>
-    <h3>Total Orders: {{total_orders}}</h3>
-    <h3>Total Earnings: ₹{{total_earnings}}</h3>
-
-    <hr>
-    <h2>Orders List</h2>
-    {% for o in orders %}
-        <p>
-        📱 {{o['user']}} <br>
-        📄 Pages: {{o['pages']}} <br>
-        💰 Price: ₹{{o['price']}}
-        </p>
-        <hr>
-    {% endfor %}
-    """
-
-    return render_template_string(html,
-                                  orders=orders,
-                                  total_orders=total_orders,
-                                  total_earnings=total_earnings)
+    return "PDF Bot Running 🚀"
 
 
 # ---------------- WEBHOOK ----------------
 @app.route("/webhook", methods=["GET", "POST"])
 def webhook():
 
+    # VERIFY
     if request.method == "GET":
         if request.args.get("hub.verify_token") == VERIFY_TOKEN:
             return request.args.get("hub.challenge")
         return "Error", 403
 
+    # RECEIVE MESSAGE
     if request.method == "POST":
         data = request.json
 
@@ -68,25 +34,13 @@ def webhook():
             msg = data["entry"][0]["changes"][0]["value"]["messages"][0]
             sender = msg["from"]
 
+            # ONLY PDF CHECK
             if msg["type"] == "document":
                 media_id = msg["document"]["id"]
 
-                pages = process_pdf(media_id)
-                price = pages * PRICE_PER_PAGE
+                pages = get_pdf_pages(media_id)
 
-                # Save order in admin panel
-                orders.append({
-                    "user": sender,
-                    "pages": pages,
-                    "price": price
-                })
-
-                reply = f"""📄 PDF Received
-
-Pages: {pages}
-Price: ₹{price}
-
-Thank you 👍"""
+                reply = f"📄 PDF Received\nPages: {pages}"
 
                 send_message(sender, reply)
 
@@ -96,8 +50,8 @@ Thank you 👍"""
         return "OK", 200
 
 
-# ---------------- PDF PROCESS ----------------
-def process_pdf(media_id):
+# ---------------- GET PDF PAGE COUNT ----------------
+def get_pdf_pages(media_id):
 
     url = f"https://graph.facebook.com/v20.0/{media_id}"
     headers = {"Authorization": f"Bearer {WHATSAPP_TOKEN}"}
@@ -109,9 +63,9 @@ def process_pdf(media_id):
 
     with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as f:
         f.write(pdf_data.content)
-        path = f.name
+        file_path = f.name
 
-    reader = PyPDF2.PdfReader(path)
+    reader = PyPDF2.PdfReader(file_path)
     return len(reader.pages)
 
 

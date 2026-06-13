@@ -6,9 +6,8 @@ import PyPDF2
 import tempfile
 app = Flask(__name__)
 
-TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
-TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
-
+TELEGRAM_BOT_TOKEN = "8901318810:AAFszegHbEY2mw6sERa-khj1ghrRqBDmdkI"
+TELEGRAM_CHAT_ID = "264634921"
 def send_telegram(text):
 
     url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"

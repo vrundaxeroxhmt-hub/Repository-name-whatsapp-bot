@@ -117,13 +117,15 @@ def webhook():
                 send_message(sender, reply)
                 return "OK", 200
 
-            # DONE
-            elif text == "DONE":
+            # DONEelif text == "DONE":
 
     pdf_pages = orders[sender]["pdf_pages"]
     photos = orders[sender]["photos"]
 
-    total = pdf_pages * PDF_RATE + photos * PHOTO_RATE
+    pdf_cost = pdf_pages * PDF_RATE
+    photo_cost = photos * PHOTO_RATE
+
+    total = pdf_cost + photo_cost
 
     telegram_msg = f"""NEW ORDER
 
@@ -136,6 +138,22 @@ Total: Rs.{total}
 """
 
     send_telegram(telegram_msg)
+
+    bill = f"""FINAL BILL
+
+PDF Pages: {pdf_pages}
+Photos: {photos}
+
+PDF Cost: Rs.{pdf_cost}
+Photo Cost: Rs.{photo_cost}
+
+TOTAL: Rs.{total}
+
+UPI:
+{UPI_ID}
+
+Payment kari screenshot moklo.
+"""
 
     send_message(sender, bill)
 

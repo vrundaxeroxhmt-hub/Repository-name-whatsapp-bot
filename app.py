@@ -116,8 +116,11 @@ def webhook():
 
                 send_message(sender, reply)
                 return "OK", 200
+        # =====================
+        # DONE
+        # =====================
 
-            # DONEelif text == "DONE":
+elif text == "DONE":
 
     pdf_pages = orders[sender]["pdf_pages"]
     photos = orders[sender]["photos"]
@@ -147,7 +150,9 @@ Photos: {photos}
 PDF Cost: Rs.{pdf_cost}
 Photo Cost: Rs.{photo_cost}
 
+--------------------
 TOTAL: Rs.{total}
+--------------------
 
 UPI:
 {UPI_ID}

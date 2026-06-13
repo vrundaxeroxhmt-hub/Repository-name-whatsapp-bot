@@ -50,6 +50,7 @@ orders = {}
 # =========================
 @app.route("/")
 def home():
+    send_telegram("HOME TEST")
     return "WhatsApp Print Bot Running 🚀"
 
 

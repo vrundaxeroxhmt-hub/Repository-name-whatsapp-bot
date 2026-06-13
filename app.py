@@ -69,7 +69,7 @@ def webhook():
     # Incoming Messages
     data = request.json
 
-    try:
+try:
     value = data["entry"][0]["changes"][0]["value"]
 
     if "messages" not in value:

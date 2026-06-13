@@ -49,8 +49,13 @@ orders = {}
 # =========================
 @app.route("/")
 def home():
-    send_telegram("HOME TEST")
-    return "WhatsApp Print Bot Running 🚀"
+
+    try:
+        send_telegram("HOME TEST FROM RENDER")
+        return "TELEGRAM SENT"
+
+    except Exception as e:
+        return str(e)
 
 
 # =========================

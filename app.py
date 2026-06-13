@@ -4,27 +4,29 @@ import requests
 import os
 import PyPDF2
 import tempfile
-
-app = Flask(__name__)
-TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
-TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 @app.route("/telegram-test")
 def telegram_test():
 
     send_telegram("✅ Telegram Test Success")
 
     return "Telegram Sent"
+app = Flask(__name__)
+TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
+@app.route("/telegram-test")
 def send_telegram(text):
 
     url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
 
-    requests.post(
+    response = requests.post(
         url,
         data={
             "chat_id": TELEGRAM_CHAT_ID,
             "text": text
         }
     )
+
+    print("Telegram:", response.text)
 # =========================
 # CONFIG
 # =========================
@@ -136,7 +138,17 @@ def webhook():
 
 Payment kari screenshot moklo.
 """
+send_telegram(
+f"""🆕 NEW ORDER
 
+Customer: {sender}
+
+PDF Pages: {pdf_pages}
+Photos: {photos}
+
+Total: ₹{total}
+"""
+)
                 send_message(sender, bill)
                 return "OK", 200
 
@@ -275,18 +287,7 @@ def send_message(to, text):
 
     print(response.text)
 
-send_telegram(
-f"""
-🆕 NEW ORDER
 
-Customer: {sender}
-
-PDF Pages: {pdf_pages}
-Photos: {photos}
-
-Total: ₹{total}
-"""
-)
 # =========================
 # RUN
 # =========================

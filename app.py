@@ -5,16 +5,10 @@ import os
 import PyPDF2
 import tempfile
 app = Flask(__name__)
-@app.route("/telegram-test")
-def telegram_test():
-
-    send_telegram("✅ Telegram Test Success")
-
-    return "Telegram Sent"
 
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
-@app.route("/telegram-test")
+
 def send_telegram(text):
 
     url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
@@ -28,6 +22,14 @@ def send_telegram(text):
     )
 
     print("Telegram:", response.text)
+
+
+@app.route("/telegram-test")
+def telegram_test():
+
+    send_telegram("✅ Telegram Test Success")
+
+    return "Telegram Sent"
 # =========================
 # CONFIG
 # =========================
@@ -123,22 +125,6 @@ def webhook():
                 total = pdf_cost + photo_cost
 
                 bill = f"""📋 FINAL BILL
-
-📄 PDF Pages: {pdf_pages}
-🖼 Photos: {photos}
-
-💰 PDF Cost: ₹{pdf_cost}
-💰 Photo Cost: ₹{photo_cost}
-
-━━━━━━━━━━━━
-✅ TOTAL: ₹{total}
-━━━━━━━━━━━━
-
-💳 UPI:
-{UPI_ID}
-
-Payment kari screenshot moklo.
-"""
 send_telegram(
 f"""🆕 NEW ORDER
 

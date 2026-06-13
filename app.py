@@ -1,3 +1,11 @@
+orders = {}
+
+PDF_RATE = 2
+PHOTO_RATE = 3
+
+UPI_ID = "9265056515@okbizaxis"
+
+
 from flask import Flask, request
 import requests
 import os
